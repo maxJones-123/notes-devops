@@ -26,18 +26,16 @@ export function createNotesRouter(repository: NoteRepository): Router {
     // TODO: update the note, answer 404 if it does not exist
     // TODO: otherwise answer with the updated note
     const result = validateNoteInput(req.body);
-    if (!result.ok)
-    {
-        res.status(400).json({errors: result.errors});
-        return;
+    if (!result.ok) {
+      res.status(400).json({ errors: result.errors });
+      return;
     }
     const note = await repository.update(req.params.id, result.value);
-    if(!note)
-    {
-        res.status(404).end();
-        return;
+    if (!note) {
+      res.status(404).end();
+      return;
     }
-    res.status(204).end();
+    res.json(note);
   });
 
   router.delete('/:id', async (req, res) => {
@@ -45,8 +43,8 @@ export function createNotesRouter(repository: NoteRepository): Router {
     // TODO: otherwise answer 204 with no body
     const deleted = await repository.delete(req.params.id);
     if (!deleted) {
-        res.status(404).end();
-        return;
+      res.status(404).end();
+      return;
     }
     res.status(204).end();
   });
