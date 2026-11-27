@@ -4,7 +4,6 @@ import {
   MAX_TITLE_LENGTH,
   validateNoteInput,
 } from '../../src/validation';
-import { title } from 'process';
 
 describe('validateNoteInput', () => {
   it('accepts a title and body and trims both', () => {
@@ -34,7 +33,6 @@ describe('validateNoteInput', () => {
 
     expect(result).toEqual({ ok: false, errors: ['Title is required'] });
   });
-
   it('rejects a title that is too long', () => {
     // TODO
     const result = validateNoteInput({
