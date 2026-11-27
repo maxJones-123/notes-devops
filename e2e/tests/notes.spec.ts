@@ -27,20 +27,40 @@ test('a user can create a note', async ({ page }) => {
   await expect(page.getByText('Milk and bread').first()).toBeVisible();
   await expect(page.getByLabel('Title')).toHaveValue('');
 });
-// Add these below the first test.
 
 test('a note is still there after the page is reloaded', async ({ page }) => {
-  // TODO
+  const title = unique('Reload');
+  await addNote(page, title);
+
+  await page.reload();
+
+  await expect(page.getByRole('heading', { name: title })).toBeVisible();
 });
 
 test('a user can edit a note', async ({ page }) => {
-  // TODO
+  const title = unique('Draft');
+  const newTitle = unique('Final');
+  await addNote(page, title);
+
+  await page.getByRole('button', { name: `Edit ${title}` }).click();
+  await page.getByLabel('Title').fill(newTitle);
+  await page.getByRole('button', { name: 'Save changes' }).click();
+
+  await expect(page.getByRole('heading', { name: newTitle })).toBeVisible();
+  await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
 });
 
 test('a user can delete a note', async ({ page }) => {
-  // TODO
+  const title = unique('Temporary');
+  await addNote(page, title);
+
+  await page.getByRole('button', { name: `Delete ${title}` }).click();
+
+  await expect(page.getByRole('heading', { name: title })).toHaveCount(0);
 });
 
 test('a note without a title is refused', async ({ page }) => {
-  // TODO
+  await page.getByRole('button', { name: 'Add note' }).click();
+
+  await expect(page.getByRole('alert')).toHaveText('Title is required');
 });
